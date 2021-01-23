@@ -1,0 +1,39 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container" style="position: relative;">
+  <img src="{% static "images/workshopk75.jpg"%}" class="img-fluid" alt="...">
+  <div class="text-block">
+    <h1>{{category}} Custom parts</h1>
+ </div>
+</div>
+
+<br>
+<div class="container">
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+  {% for x in "aaaaa" %}
+  {%for product in products%}
+    <div class="col">
+      <div class="card h-100 shadow-sm p-3 mb-5 bg-white">
+        <a href="{{ product.get_absolute_url }}">
+          <img src=" {{category.image.url}}" class="card-img-top" alt="{{category}}">
+        </a>
+        <div class="card-body" style="background-color: #e3f2fd;">
+          <h5 class="card-title">{{product.name}}</h5>
+          <p class="card-text">{{product.description}}</p>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">VISIT THE STORE</small>
+        </div>
+      </div>
+    </div>
+    {%endfor%}{%endfor%}
+
+</div>
+
+<br>
+<br>
+
+{% endblock content%}

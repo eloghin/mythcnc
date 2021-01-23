@@ -1,0 +1,101 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}
+  Shopping cart
+{% endblock %}
+
+{% block content %}
+<br>
+<div class="container">
+    <h3 class="shopping">Shopping cart</h3>
+    <br>
+    <h5>Your products ({{ cart|length }})</h5>
+
+  <div class="box-element">
+    <table class="cart">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Products</th>
+          <th>Qty.</th>
+          <th></th>
+          <th>Total price</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for item in cart %}
+      {% with product=item.product %}
+      <div class="container-fluid">
+        <tr>
+          <td>
+            <a href="{{ product.get_absolute_url }}">
+
+              <img src="{% if item.picture %}
+                                {{ item.picture.image.url }}
+                        {% else %}
+                                {% static "img/no_image.png" %}
+                        {% endif %}">
+
+            </a>
+          </td>
+          <td>{{ product.name }}</td>
+
+          <td><form action="{% url "cart:cart_add" product.id %}" method="post">
+                  {{ item.update_quantity_form.quantity }}
+                  {{ item.update_quantity_form.override }}
+                  <input type="submit" value="Update">
+                  {% csrf_token %}
+                </form>
+          </td>
+
+          <td>
+            <form action="{% url "cart:cart_remove" product.id %}"  method="post">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                <path d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+              </svg>
+
+              <input type="submit" value="Remove">
+              {% csrf_token %}
+            </form>
+          </td>
+          <td class="num"> <strong>${{ item.total_price }}</strong> 
+              {% if item.quantity > 1%}
+                  <p>Unit price: ${{item.price}}</p>
+              {% endif %}
+          </td>
+        </tr>
+        {% endwith %}
+      {% endfor %}
+        <tr class="total">
+          <td colspan="1"></td>
+          <td>Total amount</td>
+          <td colspan="2"></td>
+          <td class="num">${{ cart.get_total_price }}</td>
+        </tr>
+    </tbody>
+
+  </table>
+
+  </div>
+    <br>
+      <p class="text-right">
+          <a href="{% url "shop:index" %}" class="btn btn-secondary">Continue shopping</a>
+      <a href="{% url 'orders:order_create' %}" class="btn btn-primary">Checkout</a>
+    </p>
+  </div>
+
+
+
+
+
+{% endblock %}
